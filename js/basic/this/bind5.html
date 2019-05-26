@@ -1,0 +1,50 @@
+
+<script>
+
+// new 绑定
+// 如果函数或者方法调用之前带有关键字new，它就构成构造函数调用。对于this绑定来说，称为new绑定
+
+// 构造函数通常不使用return关键字，它们通常初始化新对象，
+// 当构造函数的函数体执行完毕时，它会显式返回。
+// 在这种情况下，构造函数调用表达式的计算结果就是这个新对象的值
+
+function fn(){
+    this.a = 2;
+}
+var test = new fn();
+console.log(test);//{a:2}
+
+// 如果构造函数使用return语句但没有指定返回值，或者返回一个原始值，
+// 那么这时将忽略返回值，同时使用这个新对象作为调用结果
+
+function fn(){
+    this.a = 2;
+    return;
+}
+var test = new fn();
+console.log(test);//{a:2}
+
+
+// 如果构造函数显式地使用return语句返回一个对象，那么调用表达式的值就是这个对象
+var obj = {a:1};
+function fn(){
+    this.a = 2;
+    return obj;
+}
+var test = new fn();
+console.log(test);//{a:1}
+
+// 尽管有时候构造函数看起来像一个方法调用，它依然会使用这个新对象作为this。
+// 也就是说，在表达式new o.m()中，this并不是o
+var o = {
+    m: function(){
+        return this;
+    }
+}
+var obj = new o.m();
+console.log(obj,obj === o);//{} false
+console.log(obj.constructor === o.m);//true
+
+
+
+</script>

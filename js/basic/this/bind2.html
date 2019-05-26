@@ -1,0 +1,23 @@
+
+<script>
+
+// 隐式绑定
+// 一般地，被直接对象所包含的函数调用时，也称为方法调用，this隐式绑定到该直接对象
+function foo(){
+    console.log(this.a);
+};
+var obj1 = {
+    a:1,
+    foo:foo,
+    obj2:{
+        a:2,
+        foo:foo
+    }
+}
+
+//foo()函数的直接对象是obj1，this隐式绑定到obj1
+obj1.foo();//1
+
+//foo()函数的直接对象是obj2，this隐式绑定到obj2
+obj1.obj2.foo();//2
+</script>

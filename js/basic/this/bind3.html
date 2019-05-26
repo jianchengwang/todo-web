@@ -1,0 +1,108 @@
+
+<script>
+
+// 隐式丢失
+// 隐式丢失是指被隐式绑定的函数丢失绑定对象，从而默认绑定到window。这种情况容易出错却又常见
+
+// 函数别名
+var a = 0;
+function foo(){
+    console.log(this.a);
+};
+var obj = {
+    a : 2,
+    foo:foo
+}
+//把obj.foo赋予别名bar，造成了隐式丢失，因为只是把foo()函数赋给了bar，而bar与obj对象则毫无关系
+var bar = obj.foo;
+bar();//0
+
+//等价于
+var a = 0;
+var bar = function foo(){
+    console.log(this.a);
+}
+bar();//0
+
+// 参数传递
+var a = 0;
+function foo(){
+    console.log(this.a);
+};
+function bar(fn){
+    fn();
+}
+var obj = {
+    a : 2,
+    foo:foo
+}
+//把obj.foo当作参数传递给bar函数时，有隐式的函数赋值fn=obj.foo。与上例类似，只是把foo函数赋给了fn，而fn与obj对象则毫无关系
+bar(obj.foo);//0
+
+//等价于
+var a = 0;
+function bar(fn){
+    fn();
+}
+bar(function foo(){
+    console.log(this.a);
+});
+
+// 内置函数
+var a = 0;
+function foo(){
+    console.log(this.a);
+};
+var obj = {
+    a : 2,
+    foo:foo
+}
+setTimeout(obj.foo,100);//0
+
+//等价于
+var a = 0;
+setTimeout(function foo(){
+    console.log(this.a);
+},100);//0
+
+// 间接引用
+function foo() {
+    console.log( this.a );
+}
+var a = 2;
+var o = { a: 3, foo: foo };
+var p = { a: 4 };
+o.foo(); // 3
+//将o.foo函数赋值给p.foo函数，然后立即执行。相当于仅仅是foo()函数的立即执行
+(p.foo = o.foo)(); // 2
+
+function foo() {
+    console.log( this.a );
+}
+var a = 2;
+var o = { a: 3, foo: foo };
+var p = { a: 4 };
+o.foo(); // 3
+//将o.foo函数赋值给p.foo函数，之后p.foo函数再执行，是属于p对象的foo函数的执行
+p.foo = o.foo;
+p.foo();//4
+
+// 其他情况
+// 在javascript引擎内部，obj和obj.foo储存在两个内存地址，简称为M1和M2。
+// 只有obj.foo()这样调用时，是从M1调用M2，因此this指向obj。
+// 但是，下面三种情况，都是直接取出M2进行运算，然后就在全局环境执行运算结果（还是M2），因此this指向全局环境
+var a = 0;
+var obj = {
+    a : 2,
+    foo:foo
+};
+function foo() {
+    console.log( this.a );
+};
+
+(obj.foo = obj.foo)();//0
+
+(false || obj.foo)();//0
+
+(1, obj.foo)();//0
+</script>

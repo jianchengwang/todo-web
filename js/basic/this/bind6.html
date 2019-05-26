@@ -1,0 +1,33 @@
+
+<script>
+
+// 严格模式
+
+// 严格模式下，独立调用的函数的this指向undefined
+function fn(){
+    'use strict';
+    console.log(this);//undefined
+}
+fn();
+
+function fn(){
+    console.log(this);//window
+}
+fn();
+
+// 在非严格模式下，使用函数的call()或apply()方法时，null或undefined值会被转换为全局对象。
+// 而在严格模式下，函数的this值始终是指定的值
+var color = 'red';
+function displayColor(){
+    console.log(this.color);
+}
+displayColor.call(null);//red
+
+var color = 'red';
+function displayColor(){
+    'use strict';
+    console.log(this.color);
+}
+displayColor.call(null);//TypeError: Cannot read property 'color' of null
+
+</script>
