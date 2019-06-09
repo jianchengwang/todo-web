@@ -10,6 +10,18 @@
 <script>
 function createStore ({ state, mutations }) {
   // Implement this!
+  // Implement a createStore function that allows the following usage.
+  return new Vue({
+    data: {
+      state
+    },
+
+    methods: {
+      commit (mutationName) {
+        mutations[mutationName](state)
+      }
+    }
+  })
 }
 
 const store = createStore({
