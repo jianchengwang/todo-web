@@ -23,12 +23,32 @@ const Bar = { template: `<div>bar</div>` }
 const NotFound = { template: `<div>not found!</div>` }
 
 const routeTable = {
-  // Implement this!
+  '/foo/:id': Foo,
+  '/bar': Bar
 }
+
+// pre-compile patterns into regex
+const compiledRouteTable = {}
+Object.keys(routeTable).forEach(pattern => {
+  const dynamicSegments = []
+  compiledRouteTable[pattern] = {
+    component: routeTable[pattern],
+    regex: pathToRegexp(pattern, dynamicSegments),
+    dynamicSegments
+  }
+})
 
 window.addEventListener('hashchange', () => {
   // Implement this!
+  app.url = window.location.hash.slice(1)
 })
+
+// path-to-regexp usage:
+// const regex = pathToRegexp(pattern)
+// const match = regex.exec(path)
+// const params = regex.keys.reduce((params, key, index) => {
+//   params[key] = match[index + 1]
+// }, {})
 
 const app = new Vue({
   el: '#app',
@@ -41,16 +61,33 @@ const app = new Vue({
     let componentToRender
     let props = {}
 
-    // Implement the logic to figure out proper values
-    // for componentToRender and props
+    // iterate through our compiled route table
+    // and check if a route matches the current path
+    // if it matches, extract dynamic segments (params) and use it as props
+    // for the matched component
+    Object.keys(compiledRouteTable).some(pattern => {
+      const { component, regex, dynamicSegments } = compiledRouteTable[pattern]
+      const match = regex.exec(path)
 
-    return h('div', [
-      h(componentToRender, { props }),
-      h('a', { attrs: { href: '#foo/123' }}, 'foo'),
-      h('a', { attrs: { href: '#foo/234' }}, 'foo'),
+      if (match) {
+        // we have a match!
+        componentToRender = component
+        dynamicSegments.forEach(({ name }, index) => {
+          props[name] = match[index + 1]
+        })
+        return true
+      }
+    })
+
+    return h('div', { attrs: { id: 'app'} }, [
+      h(componentToRender || NotFound, {
+        props
+      }),
+      h('a', { attrs: { href: '#foo/123' }}, 'foo/123'),
       ' | ',
       h('a', { attrs: { href: '#bar' }}, 'bar')
     ])
   }
 })
+
 </script>
