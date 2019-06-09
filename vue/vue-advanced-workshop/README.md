@@ -51,17 +51,3 @@ git checkout solutions
 ```
 
 After viewing the hints from the `solutions` branch, you can then go back to the `master` branch to continue the exercise.
-
-### Automated Tests
-
-For each exercise there will be an automated test case to check if your implementation meets the requirements. To run the test for a given exercise (e.g. 1.1), run:
-
-``` bash
-npm test -- -t 1.1
-```
-
-You can also run the test in watch mode (which automatically re-runs the tests as you edit the files) with:
-
-``` bash
-npm run watch
-```
