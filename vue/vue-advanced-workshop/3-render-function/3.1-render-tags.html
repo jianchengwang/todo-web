@@ -7,6 +7,13 @@
 <script>
 Vue.component('example', {
   // Implement this!
+  props: ['tags'],
+  render (h) {
+    // Note that the second argument (data object) can be omitted, and the
+    // children argument can accept strings or numbers instead of Array of vnodes.
+    return h('div', this.tags.map((tag, i) => h(tag, i)))
+  }
+
 })
 
 new Vue({ el: '#app' })
