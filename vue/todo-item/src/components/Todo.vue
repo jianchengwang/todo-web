@@ -28,15 +28,14 @@ export default {
   props: {
     msg: String
   },
+  mounted () {
+    this.itemList = this.$store.state.itemList
+  },
   data () {
     return {
       s: '',
       newItem: '',
-      itemList: [
-        'eat',
-        'sleep',
-        'play'
-      ],
+      itemList: [],
       checkedItemList: []
     }
   },
@@ -46,6 +45,12 @@ export default {
     },
     removeBtnShow () {
       return this.checkedItemList.length > 0
+    }
+  },
+  watch: {
+    itemList () {
+      this.$store.commit('updateItemList', this.itemList)
+      // this.$store.dispatch('asyncUpdateItemList', this.itemList)
     }
   },
   methods: {
