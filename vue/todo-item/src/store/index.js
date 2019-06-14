@@ -5,18 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    itemList: []
+    itemList: localStorage.getItem('itemList') === null ? [] : JSON.parse(localStorage.getItem('itemList'))
   },
   mutations: {
-    updateItemList (itemList) {
-      console.info(itemList)
-      this.state.itemList = itemList
-      localStorage.setItem('itemList', itemList)
+    updateItemList (state, itemList) {
+      state.itemList = itemList
+      localStorage.setItem('itemList', JSON.stringify(itemList))
     }
   },
   actions: {
-    asyncUpdateItemList (itemList) {
-      this.commit('updateItemList', itemList)
+    asyncUpdateItemList ({ commit }, itemList) {
+      commit('updateItemList', itemList)
     }
   }
 })
