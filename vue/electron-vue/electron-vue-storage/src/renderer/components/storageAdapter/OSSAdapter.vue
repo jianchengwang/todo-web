@@ -10,10 +10,10 @@ export default {
    data () {
       return {
          oss: {
-            endpoint: 'oss-cn-hangzhou.aliyuncs.com',
-            accessKeyId: 'pwRv2N55r5wzi1CJ',
-            accessKeySecret: 'CB6SOFly6A5WXPHECqwRQXYtyPDxLT',
-            bucketName: 'osswebtest'
+            endpoint: '',
+            accessKeyId: '',
+            accessKeySecret: '',
+            bucketName: ''
          }
       }
    }
