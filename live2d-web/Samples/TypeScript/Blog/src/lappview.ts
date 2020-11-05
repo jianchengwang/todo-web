@@ -109,7 +109,7 @@ export class LAppView {
   }
 
   /**
-   * 画像の初期化を行う。 ->   进行图像的初始化，一些不重要的元素初始化。这里有一个齿轮设置的图像，里面的内容替换成了眼睛的图标，没用所以注释掉，还加了一个背景图片加载的判断，没有背景图片就不加载
+   * 画像の初期化を行う。 ->   进行图像的初始化，一些不重要的元素初始化。这里有一个齿轮设置的图像
    */
   public initializeSprite(): void {
     const width: number = canvas.width;
@@ -140,21 +140,23 @@ export class LAppView {
     );
 
     // // 歯車画像初期化 -> 齿轮图像初始化 （原来是右上角有一个齿轮的图片，点击齿轮图片切换模型）
-    // imageName = LAppDefine.GearImageName;
+    imageName = LAppDefine.GearImageName;
     // // 齿轮初始化后的回掉函数
-    // const initGearTexture = (textureInfo: TextureInfo): void => {
-    //   const x = width - textureInfo.width * 0.5;
-    //   const y = height - textureInfo.height * 0.5;
-    //   const fwidth = textureInfo.width;
-    //   const fheight = textureInfo.height;
-    //   this._gear = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
-    // };
+    const initGearTexture = (textureInfo: TextureInfo): void => {
+      const x = width - textureInfo.width * 0.5;
+      const y = height - textureInfo.height * 0.5;
+      const fwidth = textureInfo.width;
+      const fheight = textureInfo.height;
+      this._gear = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
+      debugger
+      console.info(this._gear)
+    };
 
-    // textureManager.createTextureFromPngFile(
-    //   resourcesPath + imageName,
-    //   false,
-    //   initGearTexture
-    // );
+    textureManager.createTextureFromPngFile(
+      resourcesPath + imageName,
+      false,
+      initGearTexture
+    );
 
     // シェーダーを作成 -> 创建阴影
     if (this._programId == null) {
@@ -214,7 +216,7 @@ export class LAppView {
       live2DManager.onTap(x, y);
 
       // 歯車にタップしたか
-      if (this._gear.isHit(pointX, pointY)) {
+      if (this._gear && this._gear.isHit(pointX, pointY)) {
         live2DManager.nextScene();
       }
     }

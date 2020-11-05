@@ -20,26 +20,14 @@
   <script src = "./dist/bundle.js"></script>
 </head>
 <body>
-  <div class="live2d-main">
-    <div class="live2d-tips"></div>
-    <!-- 这里可以定义画布的大小位置 -->
-    <canvas id="live2d" width="1000px" height="800px" class="live2d"></canvas>
-    <div class="tool">
-        <span class="fui-home"></span>
-        <span class="fui-chat"></span>
-        <span class="fui-eye"></span>
-        <span class="fui-user"></span>
-        <span class="fui-photo"></span>
-        <span class="fui-info-circle"></span>
-        <span class="fui-cross"></span>
-    </div>
-  </div>
+  <!-- 这里可以定义画布的大小位置 -->
+  <div id="live2d" width="1000px" height="800px" class="live2d"></div>
 </body>
-<script src="./asserts/js/live2d.customize.js"></script>
+<script src="./assets/js/live2d.customize.js"></script>
 <script type="text/javascript">
-  var resourcesPath = './asserts/model/';  // 指定资源文件（模型）保存的路径
+  var resourcesPath = './assets/model/';  // 指定资源文件（模型）保存的路径
   var backImageName = ''; // 指定背景图片
-  var modelDir =  ['dujiaoshou_6','yichui_2','index'];  // 指定需要加载的模型
+  var modelDir =  ['1014100aqua','1044100','1033113','yichui_2','dujiaoshou_6'];  // 指定需要加载的模型
   init();  // 初始化模型，属于message.js文件
 </script>
 </html>

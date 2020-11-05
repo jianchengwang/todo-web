@@ -153,7 +153,13 @@ export namespace Live2DCubismFramework {
     ): CubismMotion {
       const ret = new CubismMotion();
 
-      ret.parse(buffer, size);
+      try {
+        ret.parse(buffer, size);
+      } catch (error) {
+        console.log(error);
+        
+      }
+      // ret.parse(buffer, size);
       ret._sourceFrameRate = ret._motionData.fps;
       ret._loopDurationSeconds = ret._motionData.duration;
       ret._onFinishedMotion = onFinishedMotionHandler;

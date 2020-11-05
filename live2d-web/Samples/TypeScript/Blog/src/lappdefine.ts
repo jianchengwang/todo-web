@@ -67,7 +67,7 @@ export const RenderTargetHeight = 1000;
 
 // 将一些函数或变量挂载到window下，成为全局变量或函数，使外部的js文件也能调用到/
 export const win: any = window
-win.initDefine=function(resourcesPath: string, backImageName: string, modelDir: string[]){
+win.initDefine = function(resourcesPath: string, backImageName: string, modelDir: string[]){
     ResourcesPath = resourcesPath;
     BackImageName = backImageName;
     ModelDir = modelDir;

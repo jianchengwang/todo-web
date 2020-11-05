@@ -56,19 +56,12 @@ export class LAppDelegate {
    */
   public initialize(): boolean {
     // キャンバスの作成 -> 创建画布
-    // canvas = document.createElement('canvas');
-    // canvas.width = LAppDefine.RenderTargetWidth;
-    // canvas.height = LAppDefine.RenderTargetHeight;
+    canvas = document.createElement('canvas');
+    canvas.width = LAppDefine.RenderTargetWidth;
+    canvas.height = LAppDefine.RenderTargetHeight;
 
      // 原来是用js动态在网页上创建画布，画布的长宽在lappdefine.ts指定，现在直接在html中已经有了画布直接拿过来使用就行
-     canvas = <HTMLCanvasElement>document.getElementById("live2d"); // index.html中的id为live2d的画布
-     canvas.width = canvas.width;
-     canvas.height = canvas.height;
-     canvas.toDataURL("image/png");
- 
-    // 这个是index.html工具栏中的眼睛图标，点击眼睛图标就切换下一个模型
-    // 正规来说应该留个切换模型的口子，在message.js中调用，因为懒就直接在这里写了
-    let fui_eye = <HTMLSpanElement>document.getElementsByClassName("fui-eye")[0];
+    var live2d_div = document.getElementById("live2d"); // index.html中的id为live2d的画布
 
     // glコンテキストを初期化 -> 初始化gl上下文
     // @ts-ignore
@@ -87,6 +80,7 @@ export class LAppDelegate {
 
     // キャンバスを DOM に追加 -> 向DOM添加画布
     // document.body.appendChild(canvas);
+    live2d_div.appendChild(canvas)
 
     if (!frameBuffer) {
       frameBuffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
@@ -107,13 +101,8 @@ export class LAppDelegate {
     } else {
       // マウス関連コールバック関数登録 -> 注册鼠标相关的回呼函数
       canvas.onmousedown = onClickBegan;
-      // canvas.onmousemove = onMouseMoved;   //原来是在画布上注册鼠标移动事件，鼠标移出画布就监听不到
-      window.onmousemove = onMouseMoved;  //对整个window窗口监听，是角色跟随鼠标，需要对鼠标坐标获取做调整
+      canvas.onmousemove = onMouseMoved;   //原来是在画布上注册鼠标移动事件，鼠标移出画布就监听不到
       canvas.onmouseup = onClickEnded;
-      fui_eye.onmousedown = (): void => {   // 工具栏眼睛图标点击事件
-        const live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
-        live2DManager.nextScene();
-      };
     }
 
     // AppViewの初期化 -> AppView的初始化
