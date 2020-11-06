@@ -61,7 +61,7 @@ export class LAppDelegate {
     canvas.height = LAppDefine.RenderTargetHeight;
 
      // 原来是用js动态在网页上创建画布，画布的长宽在lappdefine.ts指定，现在直接在html中已经有了画布直接拿过来使用就行
-    var live2d_div = document.getElementById("live2d"); // index.html中的id为live2d的画布
+    var live2d_div = LAppDefine.ViewEl; // index.html中的id为live2d的画布
 
     // glコンテキストを初期化 -> 初始化gl上下文
     // @ts-ignore
@@ -90,20 +90,43 @@ export class LAppDelegate {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    const supportTouch: boolean = 'ontouchend' in canvas;
+    // const supportTouch: boolean = 'ontouchend' in canvas;
+    // if (supportTouch) {
+    //   // タッチ関連コールバック関数登録 -> 注册触摸相关的回掉函数  （触摸屏）
+    //   canvas.ontouchstart = onTouchBegan;
+    //   canvas.ontouchmove = onTouchMoved;
+    //   canvas.ontouchend = onTouchEnded;
+    //   canvas.ontouchcancel = onTouchCancel;
+    // } else {
+    //   // マウス関連コールバック関数登録 -> 注册鼠标相关的回呼函数
+    //   canvas.onmousedown = onClickBegan;
+    //   canvas.onmousemove = onMouseMoved;   //原来是在画布上注册鼠标移动事件，鼠标移出画布就监听不到
+    //   canvas.onmouseup = onClickEnded;
+    // }
+    // 添加全局鼠标移动事件监控
+    document.addEventListener("mousemove",function(e){
+    
+      if(!LAppDelegate.getInstance()._view)
+      {
+          LAppPal.printMessage("view notfound");
+          return;
+      }
+    
+      //这里id的值与上方的 cavans 变量保持一致
+        let rect =  LAppDefine.ViewEl.getBoundingClientRect();
+        let posX: number = e.clientX -rect.left;
+        let posY: number = e.clientY - rect.top ;
+        // console.log("onMouseMoved: gate文件中posY值为： 【"+posY+"】  canvas的top距离为："+rect.top);
+        LAppDelegate.getInstance()._view.onTouchesMoved(posX, posY);
+        
+    },false);
 
-    if (supportTouch) {
-      // タッチ関連コールバック関数登録 -> 注册触摸相关的回掉函数  （触摸屏）
-      canvas.ontouchstart = onTouchBegan;
-      canvas.ontouchmove = onTouchMoved;
-      canvas.ontouchend = onTouchEnded;
-      canvas.ontouchcancel = onTouchCancel;
-    } else {
-      // マウス関連コールバック関数登録 -> 注册鼠标相关的回呼函数
-      canvas.onmousedown = onClickBegan;
-      canvas.onmousemove = onMouseMoved;   //原来是在画布上注册鼠标移动事件，鼠标移出画布就监听不到
-      canvas.onmouseup = onClickEnded;
-    }
+  //在这里加上鼠标离开浏览器后，一切归位
+  document.addEventListener("mouseout",function(e){
+      //鼠标离开document后，将其位置置为（0，0）  
+      let live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
+      live2DManager.onDrag(0.0, 0.0);
+  },false);
 
     // AppViewの初期化 -> AppView的初始化
     this._view.initialize();
@@ -146,7 +169,7 @@ export class LAppDelegate {
       LAppPal.updateTime();
 
       // 画面の初期化 -> 画面的初始化
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
       // 深度テストを有効化 -> 启动深度测试
       gl.enable(gl.DEPTH_TEST);

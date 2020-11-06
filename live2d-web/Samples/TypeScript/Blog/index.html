@@ -19,16 +19,30 @@
   <!-- Build script -->
   <script src = "./dist/bundle.js"></script>
 </head>
-<body>
+<body style="text-align: center;">
+  <input type="text" value="yichui_2" id="modelName" /><button onclick="loadModel();">loadModel</button><br/>
   <!-- 这里可以定义画布的大小位置 -->
-  <div id="live2d" width="1000px" height="800px" class="live2d"></div>
+  <div id="L2dCanvas" class="live2d" style="position: fixed; right: 10px; bottom: 10px;z-index: 99999999"></div>
 </body>
 <script src="./assets/js/live2d.customize.js"></script>
 <script type="text/javascript">
-  var resourcesPath = './assets/model/';  // 指定资源文件（模型）保存的路径
-  var backImageName = ''; // 指定背景图片
-  var modelDir =  ['1014100aqua','1044100','1033113','yichui_2','dujiaoshou_6'];  // 指定需要加载的模型
-  init();  // 初始化模型，属于message.js文件
+// https://cdn.jsdelivr.net/npm/live2dv3@latest/assets
+// https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/bg/bg_church_jp.png
+  var l2dv;
+  window.onload = () => {
+    l2dv = new L2dViewer({
+        el: document.getElementById('L2dCanvas'),
+        modelHomePath: './assets/model/',
+        modelName: '1044100',
+        // bgImg: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/bg/bg_church_jp.png',
+        width: 500,
+        height: 300
+    });
+  }
+  function loadModel() {
+    var modelName = document.getElementById('modelName').value;
+    l2dv.loadModel(modelName)
+  }
 </script>
 </html>
 </html>

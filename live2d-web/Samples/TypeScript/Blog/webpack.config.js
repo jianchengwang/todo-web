@@ -1,5 +1,6 @@
 
 var path = require('path');
+const webpack = require('webpack')
 
 module.exports = {
   entry: './src/main.ts',
@@ -34,5 +35,8 @@ module.exports = {
     useLocalIp: true,
     writeToDisk: true
   },
-  devtool: 'inline-source-map'
+  devtool: 'inline-source-map',
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
 }

@@ -23,13 +23,13 @@ export const ViewLogicalMaxBottom = -2.0;
 export const ViewLogicalMaxTop = 2.0;
 
 // 相対パス
-export let ResourcesPath = '../../Resources/';
+// export let ResourcesPath = './assets/image';
 
 // モデルの後ろにある背景の画像ファイル
-export let BackImageName = 'back_class_normal.png';
+// export let BackImageName = null;
 
 // 歯車
-export const GearImageName = 'icon_gear.png';
+export const GearImageName = './assets/image/icon_gear.png';
 
 // 終了ボタン
 export const PowerImageName = 'CloseNormal.png';
@@ -37,7 +37,7 @@ export const PowerImageName = 'CloseNormal.png';
 // モデル定義---------------------------------------------
 // モデルを配置したディレクトリ名の配列
 // ディレクトリ名とmodel3.jsonの名前を一致させておくこと
-export let ModelDir: string[] = ['Haru', 'Hiyori', 'Mark', 'Natori', 'Rice'];
+export let ModelDir: string[] = [];
 export let ModelDirSize: number = ModelDir.length;
 
 // 外部定義ファイル（json）と合わせる
@@ -61,15 +61,18 @@ export const DebugTouchLogEnable = false;
 // Frameworkから出力するログのレベル設定
 export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;
 
-// デフォルトのレンダーターゲットサイズ
-export const RenderTargetWidth = 1900;
-export const RenderTargetHeight = 1000;
-
 // 将一些函数或变量挂载到window下，成为全局变量或函数，使外部的js文件也能调用到/
-export const win: any = window
-win.initDefine = function(resourcesPath: string, backImageName: string, modelDir: string[]){
-    ResourcesPath = resourcesPath;
-    BackImageName = backImageName;
-    ModelDir = modelDir;
-    ModelDirSize = modelDir.length;
+export let ViewEl; // 挂载节点
+export let ModelHomePath; // model跟目录
+export let BgImgPath; // 背景图片地址
+export let RenderTargetWidth = window.innerWidth; // 宽度
+export let RenderTargetHeight = window.innerHeight; // 高度
+export const initDefine = function(el, modelHomePath: string, initModelName: string, bgImg: string, width: number, height: number) {
+    ViewEl = el;
+    ModelHomePath = modelHomePath;
+    ModelDir.push(initModelName);
+    BgImgPath = bgImg;
+    
+    if(width) RenderTargetWidth = width;
+    if(height) RenderTargetHeight = height;
 }

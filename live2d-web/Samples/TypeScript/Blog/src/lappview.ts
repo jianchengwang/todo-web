@@ -116,44 +116,51 @@ export class LAppView {
     const height: number = canvas.height;
 
     const textureManager = LAppDelegate.getInstance().getTextureManager();
-    const resourcesPath = LAppDefine.ResourcesPath;
 
-    let imageName = '';
+    let imagePath = '';
 
     // 背景画像初期化
-    imageName = LAppDefine.BackImageName;
+    if(LAppDefine.BgImgPath) {
+      const bgImg = document.createElement('img');
+      // 设置src值
+      bgImg.src = encodeURI(LAppDefine.BgImgPath);
+      //设置canvas属性
+      bgImg.onload = function () {
+          canvas.style.backgroundSize = `${bgImg.width}px ${bgImg.height}px`;
+          canvas.style.backgroundImage = 'url("' + bgImg.src + '")'; 
+      }
+    }
+  
 
     // 非同期なのでコールバック関数を作成
-    const initBackGroundTexture = (textureInfo: TextureInfo): void => { //如果指定了背景图片，就加载
-      const x: number = width * 0.5; //背景图片出现宽度的位置
-      const y: number = height * 0.5; //背景图片出现高度的位置
+    // const initBackGroundTexture = (textureInfo: TextureInfo): void => { //如果指定了背景图片，就加载
+    //   const x: number = width * 0.5; //背景图片出现宽度的位置
+    //   const y: number = height * 0.5; //背景图片出现高度的位置
 
-      const fwidth = textureInfo.width * 2.0; //背景图片的宽度
-      const fheight = height * 0.95;  //背景图片的高度
-      this._back = new LAppSprite(x, y, fwidth, fheight, textureInfo.id); //绘制背景图片
-    };
+    //   const fwidth = textureInfo.width * 2.0; //背景图片的宽度
+    //   const fheight = height * 0.95;  //背景图片的高度
+    //   this._back = new LAppSprite(x, y, fwidth, fheight, textureInfo.id); //绘制背景图片
+    // };
 
-    textureManager.createTextureFromPngFile( //回掉函数
-      resourcesPath + imageName,
-      false,
-      initBackGroundTexture
-    );
+    // textureManager.createTextureFromPngFile( //回掉函数
+    //   imagePath,
+    //   false,
+    //   initBackGroundTexture
+    // );
 
-    // // 歯車画像初期化 -> 齿轮图像初始化 （原来是右上角有一个齿轮的图片，点击齿轮图片切换模型）
-    imageName = LAppDefine.GearImageName;
-    // // 齿轮初始化后的回掉函数
+    // 歯車画像初期化 -> 齿轮图像初始化 （原来是右上角有一个齿轮的图片，点击齿轮图片切换模型）
+    imagePath = LAppDefine.GearImageName;
+    // 齿轮初始化后的回掉函数
     const initGearTexture = (textureInfo: TextureInfo): void => {
       const x = width - textureInfo.width * 0.5;
       const y = height - textureInfo.height * 0.5;
       const fwidth = textureInfo.width;
       const fheight = textureInfo.height;
       this._gear = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
-      debugger
-      console.info(this._gear)
     };
 
     textureManager.createTextureFromPngFile(
-      resourcesPath + imageName,
+      imagePath,
       false,
       initGearTexture
     );

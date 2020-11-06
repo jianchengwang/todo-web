@@ -6,20 +6,29 @@
  */
 
 import { LAppDelegate } from './lappdelegate';
+import { LAppLive2DManager } from './lapplive2dmanager';
+import * as LAppDefine from './lappdefine';
 
-/**
- * ブラウザロード後の処理 -> 浏览器装入后的处理（打开页面）
- */
-window.onload = (): void => {
-  // create the application instance
-  if (LAppDelegate.getInstance().initialize() == false) {
-    return;
+export const win: any = window
+win.L2dViewer = class L2dViewer {
+  constructor(config: {el, modelHomePath: string, modelName: string, bgImg: string, width: number, height: number}) {
+     // 初始化默认全局变量
+    LAppDefine.initDefine(config.el, config.modelHomePath, config.modelName, config.bgImg, config.width, config.height);
+    win.onbeforeunload = (): void => LAppDelegate.releaseInstance();
+    // create the application instance
+    if (LAppDelegate.getInstance().initialize() == false) {
+      return;
+    }
+    LAppDelegate.getInstance().run();
   }
 
-  LAppDelegate.getInstance().run();
-};
-
-/**
- * 終了時の処理 -> 结束时的处理 (刷新或关闭页面)
- */
-window.onbeforeunload = (): void => LAppDelegate.releaseInstance();
+  public loadModel(modelName: string) {
+    const live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
+    let modelIndex = 0;
+    if(LAppDefine.ModelDir.indexOf(modelName) == -1) {
+      LAppDefine.ModelDir.push(modelName);    
+      modelIndex = LAppDefine.ModelDir.length - 1;
+    }
+    live2DManager.changeScene(modelIndex);
+  }
+}

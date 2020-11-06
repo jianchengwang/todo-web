@@ -85,7 +85,6 @@ export class LAppSprite {
       // ロードが完了していない
       return;
     }
-
     // 初回描画時
     if (this._firstDraw) {
       // 何番目のattribute変数か取得

@@ -179,7 +179,7 @@ export class LAppLive2DManager {
     // ディレクトリ名とmodel3.jsonの名前を一致させておくこと。 -> 要使目录名和model 3.json的名字一致
     console.log(LAppDefine)
     const model: string = LAppDefine.ModelDir[index];
-    const modelPath: string = LAppDefine.ResourcesPath + model + '/';
+    const modelPath: string = LAppDefine.ModelHomePath + model + '/';
     let modelJsonName: string = LAppDefine.ModelDir[index];
     modelJsonName += '.model3.json'; //拼接生成模型路径
 
