@@ -20,11 +20,15 @@
   <script src = "./dist/bundle.js"></script>
 </head>
 <body style="text-align: center;">
-  <input type="text" value="yichui_2" id="modelName" /><button onclick="loadModel();">loadModel</button><br/>
+  <div>
+    <select id="charSelect" style="width: 200px;"></select>
+    <input type="text" value="yichui_2" id="modelName" /><button onclick="loadModel();">loadModel</button><br/>
+    <div id="motionDiv" style="margin-top: 5px;"></div>
+  </div>
   <!-- 这里可以定义画布的大小位置 -->
-  <div id="L2dCanvas" class="live2d" style="position: fixed; right: 10px; bottom: 10px;z-index: 99999999"></div>
+  <div id="L2dCanvas" class="live2d" style="position:block;margin:50px auto;z-index: -1;"></div>
 </body>
-<script src="./assets/js/live2d.customize.js"></script>
+<script src="./assets/js/charData.js"></script>
 <script type="text/javascript">
 // https://cdn.jsdelivr.net/npm/live2dv3@latest/assets
 // https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/bg/bg_church_jp.png
@@ -32,17 +36,64 @@
   window.onload = () => {
     l2dv = new L2dViewer({
         el: document.getElementById('L2dCanvas'),
-        modelHomePath: './assets/model/',
-        modelName: '1044100',
-        // bgImg: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/bg/bg_church_jp.png',
-        width: 500,
-        height: 300
+        // modelHomePath: './assets/model/',
+        modelHomePath: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/',
+        model: 'yichui_2',
+        bgImg: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/bg/bg_church_jp.png',
+        autoMotion: false,
+        _finishedLoadModel: function() {
+          var motionDiv = document.getElementById("motionDiv");  
+          l2dv.getMotions().forEach((v,k) => {
+            let motionName = k;
+            if(motionName.startsWith('motions/')) {
+              motionName = motionName.replace('motions/', '');
+            }
+            var bt = document.createElement("button");
+            bt.innerHTML = motionName; 
+            bt.style.marginLeft = "2px";
+            bt.onclick = function () {                          //绑定点击事件
+              l2dv.startMotion(k);
+            };
+            motionDiv.appendChild(bt);
+          })
+        }
     });
+    renderCharDataSelect();
   }
+
+  function renderCharDataSelect() {
+    var charSelect = document.getElementById("charSelect");  
+    for(let key in charData) {
+      var opt = document.createElement("option");  
+      var _text = document.createTextNode(key); 
+      opt.appendChild(_text);  
+      opt.setAttribute("value", charData[key]);  
+      charSelect.appendChild(opt);
+    }
+    charSelect.addEventListener("change", changeChar)
+  }
+
+  function changeChar() {
+    var charSelect = document.getElementById("charSelect"); 
+    var modelName = charSelect.options[charSelect.selectedIndex].value;
+    document.getElementById('modelName').value = modelName;
+    loadModel()
+  }
+
   function loadModel() {
     var modelName = document.getElementById('modelName').value;
     l2dv.loadModel(modelName)
   }
+
+  // aierdeliqi_4
+  // banrenma_2
+  // biaoqiang
+  // biaoqiang_3
+  // chuixue_3
+  // kelifulan_3
+  // lafei
+  // lafei_4
+  // xuefeng
 </script>
 </html>
 </html>

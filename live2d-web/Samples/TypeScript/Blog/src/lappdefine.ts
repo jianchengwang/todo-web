@@ -62,12 +62,15 @@ export const DebugTouchLogEnable = false;
 export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;
 
 // 将一些函数或变量挂载到window下，成为全局变量或函数，使外部的js文件也能调用到/
+export const win: any = window
 export let ViewEl; // 挂载节点
 export let ModelHomePath; // model跟目录
 export let BgImgPath; // 背景图片地址
 export let RenderTargetWidth = window.innerWidth; // 宽度
 export let RenderTargetHeight = window.innerHeight; // 高度
-export const initDefine = function(el, modelHomePath: string, initModelName: string, bgImg: string, width: number, height: number) {
+export let AutoRandomMotion = true;
+
+export const initDefine = function(el, modelHomePath: string, initModelName: string, bgImg: string, width: number, height: number, autoMotion: boolean) {
     ViewEl = el;
     ModelHomePath = modelHomePath;
     ModelDir.push(initModelName);
@@ -75,4 +78,6 @@ export const initDefine = function(el, modelHomePath: string, initModelName: str
     
     if(width) RenderTargetWidth = width;
     if(height) RenderTargetHeight = height;
+
+    if(autoMotion != undefined) AutoRandomMotion = autoMotion;
 }

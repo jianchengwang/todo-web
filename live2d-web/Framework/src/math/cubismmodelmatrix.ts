@@ -41,7 +41,7 @@ export namespace Live2DCubismFramework {
     public setWidth(w: number): void {
       const scaleX: number = w / this._width;
       const scaleY: number = scaleX;
-      this.scale(scaleX*1.5, scaleY*1.5);
+      this.scale(scaleX, scaleY);
     }
 
     /**
@@ -51,7 +51,7 @@ export namespace Live2DCubismFramework {
     public setHeight(h: number): void {
       const scaleX: number = h / this._height;
       const scaleY: number = scaleX;
-      this.scale(scaleX*1.5, scaleY*1.5);
+      this.scale(scaleX, scaleY);
     }
 
     /**

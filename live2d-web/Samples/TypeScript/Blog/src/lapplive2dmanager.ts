@@ -84,7 +84,6 @@ export class LAppLive2DManager {
   public onDrag(x: number, y: number): void {
     for (let i = 0; i < this._models.getSize(); i++) {
       const model: LAppModel = this.getModel(i);
-
       if (model) {
         model.setDragging(x, y);
       }
@@ -103,28 +102,32 @@ export class LAppLive2DManager {
         `[APP]tap point: {x: ${x.toFixed(2)} y: ${y.toFixed(2)}}`
       );
     }
-
-    for (let i = 0; i < this._models.getSize(); i++) {
-      if (this._models.at(i).hitTest(LAppDefine.HitAreaNameHead, x, y)) {
-        if (LAppDefine.DebugLogEnable) {
-          LAppPal.printMessage(
-            `[APP]hit area: [${LAppDefine.HitAreaNameHead}]`
-          );
+    if(LAppDefine.win._onTap) {
+      LAppDefine.win._onTap();
+    } else{
+      for (let i = 0; i < this._models.getSize(); i++) {
+        const model: LAppModel = this.getModel(i);
+        if (model) {
+          if (model.hitTest(LAppDefine.HitAreaNameHead, x, y)) {
+            if (LAppDefine.DebugLogEnable) {
+              LAppPal.printMessage(
+                `[APP]hit area: [${LAppDefine.HitAreaNameHead}]`
+              );
+            }
+            model.setRandomExpression();
+          } else if (model.hitTest(LAppDefine.HitAreaNameBody, x, y)) {
+            if (LAppDefine.DebugLogEnable) {
+              LAppPal.printMessage(
+                `[APP]hit area: [${LAppDefine.HitAreaNameBody}]`
+              );
+            }
+            model.startRandomMotion(
+                LAppDefine.MotionGroupTapBody,
+                LAppDefine.PriorityNormal,
+                this._finishedMotion
+              );
+          }
         }
-        this._models.at(i).setRandomExpression();
-      } else if (this._models.at(i).hitTest(LAppDefine.HitAreaNameBody, x, y)) {
-        if (LAppDefine.DebugLogEnable) {
-          LAppPal.printMessage(
-            `[APP]hit area: [${LAppDefine.HitAreaNameBody}]`
-          );
-        }
-        this._models
-          .at(i)
-          .startRandomMotion(
-            LAppDefine.MotionGroupTapBody,
-            LAppDefine.PriorityNormal,
-            this._finishedMotion
-          );
       }
     }
   }
@@ -177,14 +180,12 @@ export class LAppLive2DManager {
     // ModelDir[]に保持したディレクトリ名から -> 从ModelDir[]中保存的目录名称
     // model3.jsonのパスを決定する。
     // ディレクトリ名とmodel3.jsonの名前を一致させておくこと。 -> 要使目录名和model 3.json的名字一致
-    console.log(LAppDefine)
     const model: string = LAppDefine.ModelDir[index];
     const modelPath: string = LAppDefine.ModelHomePath + model + '/';
     let modelJsonName: string = LAppDefine.ModelDir[index];
     modelJsonName += '.model3.json'; //拼接生成模型路径
 
-    console.info(modelJsonName)
-
+    LAppPal.printMessage(modelJsonName);
     this.releaseAllModel(); //清除原来显示的模型
     this._models.pushBack(new LAppModel());  // 推入管理栈堆
     this._models.at(0).loadAssets(modelPath, modelJsonName); //加载模型，lappmodel.ts异步请求服务器模型资源

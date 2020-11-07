@@ -12,8 +12,6 @@ import Csm_CubismMatrix44 = cubismMatrix44.CubismMatrix44;
 import { TouchManager } from './touchmanager';
 import { LAppLive2DManager } from './lapplive2dmanager';
 import { LAppDelegate, canvas, gl } from './lappdelegate';
-import { LAppSprite } from './lappsprite';
-import { TextureInfo } from './lapptexturemanager';
 import { LAppPal } from './lapppal';
 import * as LAppDefine from './lappdefine';
 
@@ -26,8 +24,6 @@ export class LAppView {
    */
   constructor() {
     this._programId = null;
-    this._back = null;
-    this._gear = null;
 
     // タッチ関係のイベント管理
     this._touchManager = new TouchManager();
@@ -78,12 +74,6 @@ export class LAppView {
     this._touchManager = null;
     this._deviceToScreen = null;
 
-    this._gear.release();
-    this._gear = null;
-
-    this._back.release();
-    this._back = null;
-
     gl.deleteProgram(this._programId);
     this._programId = null;
   }
@@ -93,13 +83,6 @@ export class LAppView {
    */
   public render(): void {
     gl.useProgram(this._programId);
-
-    if (this._back) {
-      this._back.render(this._programId);
-    }
-    if (this._gear) {
-      this._gear.render(this._programId);
-    }
 
     gl.flush();
 
@@ -112,62 +95,19 @@ export class LAppView {
    * 画像の初期化を行う。 ->   进行图像的初始化，一些不重要的元素初始化。这里有一个齿轮设置的图像
    */
   public initializeSprite(): void {
-    const width: number = canvas.width;
-    const height: number = canvas.height;
 
-    const textureManager = LAppDelegate.getInstance().getTextureManager();
-
-    let imagePath = '';
-
-    // 背景画像初期化
     if(LAppDefine.BgImgPath) {
-      const bgImg = document.createElement('img');
-      // 设置src值
-      bgImg.src = encodeURI(LAppDefine.BgImgPath);
-      //设置canvas属性
-      bgImg.onload = function () {
-          canvas.style.backgroundSize = `${bgImg.width}px ${bgImg.height}px`;
-          canvas.style.backgroundImage = 'url("' + bgImg.src + '")'; 
+      var bgImg = new Image();
+      bgImg.src = LAppDefine.BgImgPath;
+      bgImg.crossOrigin = '';
+      bgImg.onload = function(){
+        canvas.width = bgImg.width;
+        canvas.height = bgImg.height;
+        canvas.style.backgroundImage = "url('" + bgImg.src + "')";
+        canvas.style.backgroundSize = `${bgImg.width}px ${bgImg.height}px`;
+        canvas.style.backgroundPosition =  "center center";
+        canvas.style.backgroundRepeat = "no-repeat";
       }
-    }
-  
-
-    // 非同期なのでコールバック関数を作成
-    // const initBackGroundTexture = (textureInfo: TextureInfo): void => { //如果指定了背景图片，就加载
-    //   const x: number = width * 0.5; //背景图片出现宽度的位置
-    //   const y: number = height * 0.5; //背景图片出现高度的位置
-
-    //   const fwidth = textureInfo.width * 2.0; //背景图片的宽度
-    //   const fheight = height * 0.95;  //背景图片的高度
-    //   this._back = new LAppSprite(x, y, fwidth, fheight, textureInfo.id); //绘制背景图片
-    // };
-
-    // textureManager.createTextureFromPngFile( //回掉函数
-    //   imagePath,
-    //   false,
-    //   initBackGroundTexture
-    // );
-
-    // 歯車画像初期化 -> 齿轮图像初始化 （原来是右上角有一个齿轮的图片，点击齿轮图片切换模型）
-    imagePath = LAppDefine.GearImageName;
-    // 齿轮初始化后的回掉函数
-    const initGearTexture = (textureInfo: TextureInfo): void => {
-      const x = width - textureInfo.width * 0.5;
-      const y = height - textureInfo.height * 0.5;
-      const fwidth = textureInfo.width;
-      const fheight = textureInfo.height;
-      this._gear = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
-    };
-
-    textureManager.createTextureFromPngFile(
-      imagePath,
-      false,
-      initGearTexture
-    );
-
-    // シェーダーを作成 -> 创建阴影
-    if (this._programId == null) {
-      this._programId = LAppDelegate.getInstance().createShader();
     }
   }
 
@@ -221,11 +161,6 @@ export class LAppView {
         LAppPal.printMessage(`[APP]touchesEnded x: ${x} y: ${y}`);
       }
       live2DManager.onTap(x, y);
-
-      // 歯車にタップしたか
-      if (this._gear && this._gear.isHit(pointX, pointY)) {
-        live2DManager.nextScene();
-      }
     }
   }
 
@@ -270,8 +205,6 @@ export class LAppView {
   _deviceToScreen: Csm_CubismMatrix44; // デバイスからスクリーンへの行列
   _viewMatrix: Csm_CubismViewMatrix; // viewMatrix
   _programId: WebGLProgram; // シェーダID
-  _back: LAppSprite; // 背景画像
-  _gear: LAppSprite; // ギア画像
   _changeModel: boolean; // モデル切り替えフラグ
   _isClick: boolean; // クリック中
 }

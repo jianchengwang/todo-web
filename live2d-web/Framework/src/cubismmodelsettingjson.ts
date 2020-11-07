@@ -372,6 +372,7 @@ export namespace Live2DCubismFramework {
      * @return モーションファイルの名前
      */
     public getMotionFileName(groupName: string, index: number): string {
+
       if (!this.isExistMotionGroupName(groupName)) {
         return '';
       }

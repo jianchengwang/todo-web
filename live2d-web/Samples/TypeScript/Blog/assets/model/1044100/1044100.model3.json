@@ -7,9 +7,15 @@
     ],
     "Physics": "physics3.json",
     "Motions": {
-      "": [
+      "Idle": [
         {
           "File": "motions/00_Wait_01.motion3.json"
+        },
+        {
+          "File": "motions/20_Expression_Serious_01.motion3.json"
+        },
+        {
+          "File": "motions/00_Pride_02.motion3.json"
         },
         {
           "File": "motions/20_Expression_Serious_01.motion3.json"

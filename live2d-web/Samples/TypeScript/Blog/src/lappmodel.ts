@@ -84,7 +84,7 @@ export class LAppModel extends CubismUserModel {
    * @param dir
    * @param fileName
    */
-  public loadAssets(dir: string, fileName: string): void {
+  public loadAssets(dir: string, fileName: string, _finishedLoadModel?: Function): void {
     this._modelHomeDir = dir;
 
     fetch(`${this._modelHomeDir}/${fileName}`)
@@ -109,7 +109,7 @@ export class LAppModel extends CubismUserModel {
    *
    * @param setting ICubismModelSettingのインスタンス
    */
-  private setupModel(setting: ICubismModelSetting): void {
+  private setupModel(setting: ICubismModelSetting, _finishedLoadModel?: Function): void {
     this._updating = true;
     this._initialized = false;
 
@@ -417,6 +417,11 @@ export class LAppModel extends CubismUserModel {
           if (this._textureCount >= textureCount) {
             // ロード完了
             this._state = LoadStep.CompleteSetup;
+
+            // 模型加载完回调
+            if(LAppDefine.win._finishedLoadModel) {
+              LAppDefine.win._finishedLoadModel();
+            }
           }
         };
 
@@ -460,15 +465,21 @@ export class LAppModel extends CubismUserModel {
     this._model.loadParameters(); // 前回セーブされた状態をロード
     if (this._motionManager.isFinished()) {
       // モーションの再生がない場合、待機モーションの中からランダムで再生する
-      this.startRandomMotion(
-        LAppDefine.MotionGroupIdle,
-        LAppDefine.PriorityIdle
-      );
+      if(LAppDefine.AutoRandomMotion) {
+        this.startRandomMotion(
+          LAppDefine.MotionGroupIdle,
+          LAppDefine.PriorityIdle
+        );
+      }
     } else {
-      motionUpdated = this._motionManager.updateMotion(
-        this._model,
-        deltaTimeSeconds
-      ); // モーションを更新
+      try {
+        motionUpdated = this._motionManager.updateMotion(
+          this._model,
+          deltaTimeSeconds
+        ); // モーションを更新
+      } catch (error) {
+        LAppPal.printMessage(error);
+      }
     }
     this._model.saveParameters(); // 状態を保存
     //--------------------------------------------------------------------------
@@ -554,7 +565,12 @@ export class LAppModel extends CubismUserModel {
       return InvalidMotionQueueEntryHandleValue;
     }
 
-    const motionFileName = this._modelSetting.getMotionFileName(group, no);
+    let motionFileName = ''
+    try {
+      motionFileName = this._modelSetting.getMotionFileName(group, no);
+    } catch (error) {
+      LAppPal.printMessage(group + " " + no + error)
+    }
 
     // ex) idle_0
     const name = `${group}_${no}`;
@@ -571,16 +587,27 @@ export class LAppModel extends CubismUserModel {
             null,
             onFinishedMotionHandler
           );
-          let fadeTime: number = this._modelSetting.getMotionFadeInTimeValue(
-            group,
-            no
-          );
+          let fadeTime: number = 0.0;
+          try {
+            fadeTime = this._modelSetting.getMotionFadeInTimeValue(
+              group,
+              no
+            );
+          } catch (error) {
+            LAppPal.printMessage(error)
+          }
 
           if (fadeTime >= 0.0) {
             motion.setFadeInTime(fadeTime);
           }
 
-          fadeTime = this._modelSetting.getMotionFadeOutTimeValue(group, no);
+          fadeTime = 0.0;
+          try {
+            fadeTime = this._modelSetting.getMotionFadeOutTimeValue(group, no);
+          } catch (error) {
+            LAppPal.printMessage(error)
+          }
+
           if (fadeTime >= 0.0) {
             motion.setFadeOutTime(fadeTime);
           }
@@ -614,6 +641,11 @@ export class LAppModel extends CubismUserModel {
     priority: number,
     onFinishedMotionHandler?: FinishedMotionCallback
   ): CubismMotionQueueEntryHandle {
+        
+    if(!this._groups.includes(group)) {
+      group = this._groups[0];
+    }
+    
     if (this._modelSetting.getMotionCount(group) == 0) {
       return InvalidMotionQueueEntryHandleValue;
     }
@@ -621,7 +653,7 @@ export class LAppModel extends CubismUserModel {
     const no: number = Math.floor(
       Math.random() * this._modelSetting.getMotionCount(group)
     );
-
+    
     return this.startMotion(group, no, priority, onFinishedMotionHandler);
   }
 
@@ -690,12 +722,20 @@ export class LAppModel extends CubismUserModel {
       return false;
     }
 
-    const count: number = this._modelSetting.getHitAreasCount();
+    // const count: number = this._modelSetting.getHitAreasCount();
 
-    for (let i = 0; i < count; i++) {
-      if (this._modelSetting.getHitAreaName(i) == hitArenaName) {
-        const drawId: CubismIdHandle = this._modelSetting.getHitAreaId(i);
-        return this.isHit(drawId, x, y);
+    // for (let i = 0; i < count; i++) {
+    //   if (this._modelSetting.getHitAreaName(i) == hitArenaName) {
+    //     const drawId: CubismIdHandle = this._modelSetting.getHitAreaId(i);
+    //     return this.isHit(drawId, x, y);
+    //   }
+    // }
+
+    if(y>-0.5 && y<0.5 && x>-0.25 && x<0.25) {
+      if(hitArenaName == LAppDefine.HitAreaNameHead && y>=0.25) {
+        return true;
+      } if(hitArenaName == LAppDefine.HitAreaNameBody && y<=0.25) {
+        return true;
       }
     }
 
@@ -710,6 +750,7 @@ export class LAppModel extends CubismUserModel {
    */
   public preLoadMotionGroup(group: string): void {
     for (let i = 0; i < this._modelSetting.getMotionCount(group); i++) {
+      this._groups.push(group);
       const motionFileName = this._modelSetting.getMotionFileName(group, i);
 
       // ex) idle_0
@@ -745,6 +786,7 @@ export class LAppModel extends CubismUserModel {
           }
 
           this._motions.setValue(name, tmpMotion);
+          this._motion_map.set(motionFileName, name);
 
           this._motionCount++;
           if (this._motionCount >= this._allMotionCount) {
@@ -852,6 +894,9 @@ export class LAppModel extends CubismUserModel {
     this._textureCount = 0;
     this._motionCount = 0;
     this._allMotionCount = 0;
+
+    this._groups = []
+    this._motion_map = new Map();
   }
 
   _modelSetting: ICubismModelSetting; // モデルセッティング情報
@@ -879,4 +924,7 @@ export class LAppModel extends CubismUserModel {
   _textureCount: number; // テクスチャカウント
   _motionCount: number; // モーションデータカウント
   _allMotionCount: number; // モーション総数
+
+  _groups: string[]
+  _motion_map: Map<any, any>;
 }

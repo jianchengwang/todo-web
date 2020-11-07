@@ -7,7 +7,13 @@
     ],
     "Physics": "dujiaoshou_6.physics3.json",
     "Motions": {
-      "": [
+      "Idle": [
+        {
+          "File": "motions/idle.motion3.json"
+        },
+        {
+          "File": "motions/main_1.motion3.json"
+        },
         {
           "File": "motions/complete.motion3.json"
         },
@@ -15,13 +21,13 @@
           "File": "motions/effect.motion3.json"
         },
         {
-          "File": "motions/main_1.motion3.json"
-        },
-        {
           "File": "motions/mission_complete.motion3.json"
         },
         {
           "File": "motions/mission.motion3.json"
+        },
+        {
+          "File": "motions/main_2.motion3.json"
         },
         {
           "File": "motions/main_3.motion3.json"
@@ -32,9 +38,7 @@
         {
           "File": "motions/touch_body.motion3.json"
         },
-        {
-          "File": "motions/main_2.motion3.json"
-        },
+
         {
           "File": "motions/wedding.motion3.json"
         },

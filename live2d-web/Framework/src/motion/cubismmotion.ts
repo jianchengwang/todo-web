@@ -923,7 +923,8 @@ export namespace Live2DCubismFramework {
       for (let u = 0; u < this._motionData.eventCount; ++u) {
         if (
           this._motionData.events.at(u).fireTime > beforeCheckTimeSeconds &&
-          this._motionData.events.at(u).fireTime <= motionTimeSeconds
+          this._motionData.events.at(u).fireTime <= motionTimeSeconds && 
+          this._motionData.events.at(u).value
         ) {
           this._firedEventValues.pushBack(
             new csmString(this._motionData.events.at(u).value.s)

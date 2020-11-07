@@ -35,8 +35,8 @@ module.exports = {
     useLocalIp: true,
     writeToDisk: true
   },
-  devtool: 'inline-source-map',
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ]
+  // devtool: 'inline-source-map',
+  // plugins: [
+  //   new webpack.HotModuleReplacementPlugin()
+  // ]
 }

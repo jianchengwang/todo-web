@@ -70,6 +70,8 @@ export class LAppTextureManager {
 
     // データのオンロードをトリガーにする
     const img = new Image();
+    // 设置跨域
+    img.crossOrigin = ''
     img.onload = (): void => {
       // テクスチャオブジェクトの作成
       const tex: WebGLTexture = gl.createTexture();
