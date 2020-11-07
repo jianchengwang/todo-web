@@ -731,15 +731,15 @@ export class LAppModel extends CubismUserModel {
     //   }
     // }
 
-    if(y>-0.5 && y<0.5 && x>-0.25 && x<0.25) {
-      if(hitArenaName == LAppDefine.HitAreaNameHead && y>=0.25) {
-        return true;
-      } if(hitArenaName == LAppDefine.HitAreaNameBody && y<=0.25) {
-        return true;
-      }
-    }
+    // if(y>-0.5 && y<0.5 && x>-0.25 && x<0.25) {
+    //   if(hitArenaName == LAppDefine.HitAreaNameHead && y>=0.25) {
+    //     return true;
+    //   } if(hitArenaName == LAppDefine.HitAreaNameBody && y<=0.25) {
+    //     return true;
+    //   }
+    // }
 
-    return false;
+    return true;
   }
 
   /**

@@ -57,6 +57,7 @@ export class LAppDelegate {
   public initialize(): boolean {
     // キャンバスの作成 -> 创建画布
     canvas = document.createElement('canvas');
+    canvas.id = 'l2d-canvas';
     canvas.width = LAppDefine.RenderTargetWidth;
     canvas.height = LAppDefine.RenderTargetHeight;
 

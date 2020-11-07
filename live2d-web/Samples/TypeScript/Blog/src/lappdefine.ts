@@ -72,6 +72,9 @@ export let AutoRandomMotion = true;
 
 export const initDefine = function(el, modelHomePath: string, initModelName: string, bgImg: string, width: number, height: number, autoMotion: boolean) {
     ViewEl = el;
+    if(!modelHomePath.endsWith("/")) {
+        modelHomePath +=  "/";
+    }
     ModelHomePath = modelHomePath;
     ModelDir.push(initModelName);
     BgImgPath = bgImg;
@@ -80,4 +83,8 @@ export const initDefine = function(el, modelHomePath: string, initModelName: str
     if(height) RenderTargetHeight = height;
 
     if(autoMotion != undefined) AutoRandomMotion = autoMotion;
+}
+
+export const updateBgImgPath = function (bgImg: string) {
+    BgImgPath = bgImg;
 }

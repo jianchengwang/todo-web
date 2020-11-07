@@ -108,25 +108,35 @@ export class LAppLive2DManager {
       for (let i = 0; i < this._models.getSize(); i++) {
         const model: LAppModel = this.getModel(i);
         if (model) {
-          if (model.hitTest(LAppDefine.HitAreaNameHead, x, y)) {
-            if (LAppDefine.DebugLogEnable) {
-              LAppPal.printMessage(
-                `[APP]hit area: [${LAppDefine.HitAreaNameHead}]`
-              );
-            }
-            model.setRandomExpression();
-          } else if (model.hitTest(LAppDefine.HitAreaNameBody, x, y)) {
-            if (LAppDefine.DebugLogEnable) {
-              LAppPal.printMessage(
-                `[APP]hit area: [${LAppDefine.HitAreaNameBody}]`
-              );
-            }
-            model.startRandomMotion(
+        //   if (model.hitTest(LAppDefine.HitAreaNameHead, x, y)) {
+        //     if (LAppDefine.DebugLogEnable) {
+        //       LAppPal.printMessage(
+        //         `[APP]hit area: [${LAppDefine.HitAreaNameHead}]`
+        //       );
+        //     }
+        //     model.setRandomExpression();
+        //   } else if (model.hitTest(LAppDefine.HitAreaNameBody, x, y)) {
+        //     if (LAppDefine.DebugLogEnable) {
+        //       LAppPal.printMessage(
+        //         `[APP]hit area: [${LAppDefine.HitAreaNameBody}]`
+        //       );
+        //     }
+        //     model.startRandomMotion(
+        //         LAppDefine.MotionGroupTapBody,
+        //         LAppDefine.PriorityNormal,
+        //         this._finishedMotion
+        //       );
+        //   }
+        // }
+           if(x%2 == 0) {
+              model.setRandomExpression();
+           } else {
+              model.startRandomMotion(
                 LAppDefine.MotionGroupTapBody,
                 LAppDefine.PriorityNormal,
                 this._finishedMotion
               );
-          }
+           }
         }
       }
     }

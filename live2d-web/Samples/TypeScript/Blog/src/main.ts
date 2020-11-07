@@ -71,4 +71,8 @@ win.L2dViewer = class L2dViewer {
     }
     return null;
   }
+
+  public setBgImg(bgImg: string) {
+    LAppDelegate.getInstance()._view.setCanvasBgImg(bgImg);
+  }
 }

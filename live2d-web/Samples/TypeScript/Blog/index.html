@@ -36,13 +36,14 @@
   window.onload = () => {
     l2dv = new L2dViewer({
         el: document.getElementById('L2dCanvas'),
-        // modelHomePath: './assets/model/',
-        modelHomePath: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/',
+        modelHomePath: './assets/model/',
+        // modelHomePath: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/',
         model: 'yichui_2',
         bgImg: 'https://cdn.jsdelivr.net/gh/alg-wiki/AzurLaneL2DViewer@gh-pages/assets/bg/bg_church_jp.png',
         autoMotion: false,
         _finishedLoadModel: function() {
           var motionDiv = document.getElementById("motionDiv");  
+          motionDiv.innerHTML = "";
           l2dv.getMotions().forEach((v,k) => {
             let motionName = k;
             if(motionName.startsWith('motions/')) {

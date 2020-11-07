@@ -97,8 +97,14 @@ export class LAppView {
   public initializeSprite(): void {
 
     if(LAppDefine.BgImgPath) {
+      this.setCanvasBgImg(LAppDefine.BgImgPath);
+    }
+  }
+
+  public setCanvasBgImg(bgImgPath: string) {
+    if(bgImgPath) {
       var bgImg = new Image();
-      bgImg.src = LAppDefine.BgImgPath;
+      bgImg.src = bgImgPath;
       bgImg.crossOrigin = '';
       bgImg.onload = function(){
         canvas.width = bgImg.width;
@@ -107,8 +113,10 @@ export class LAppView {
         canvas.style.backgroundSize = `${bgImg.width}px ${bgImg.height}px`;
         canvas.style.backgroundPosition =  "center center";
         canvas.style.backgroundRepeat = "no-repeat";
+        LAppDefine.updateBgImgPath(bgImgPath);
       }
     }
+    
   }
 
   /**
