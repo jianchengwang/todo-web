@@ -14,7 +14,9 @@
     "nuxt": "^2.14.6",
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",
-    "sass-resources-loader": "^2.1.1"
+    "uuid": "^8.3.1",
+    "vuelidate": "^0.7.6",
+    "@vue/composition-api": "latest"
   },
   "devDependencies": {}
 }
