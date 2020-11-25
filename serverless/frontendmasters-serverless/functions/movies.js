@@ -21,7 +21,6 @@ exports.handler = async () => {
             }
         `,
     });
-    console.info(movies)
 
     const movieScoreApi = new URL("https://www.omdbapi.com/");
     // add the secret API key to the query string
