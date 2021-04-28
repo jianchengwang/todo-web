@@ -3,11 +3,13 @@
     <ext-toolbar border="1">
       <ext-button text="Button" border="1" @tap="showComponent('Button')"></ext-button>
       <ext-button text="Media" border="1" @tap="showComponent('Media')"></ext-button>
-      <ext-button text="Grid" border="1" @tap="showComponent('Button')"></ext-button>
+      <ext-button text="Grid" border="1" @tap="showComponent('Grid')"></ext-button>
       <ext-button text="Tree" border="1" @tap="showComponent('Button')"></ext-button>
       <ext-button text="Button" border="1" @tap="showComponent('Button')"></ext-button>
     </ext-toolbar>
-    <router-view></router-view>
+    <ext-container>
+      <router-view></router-view>
+    </ext-container>
   </ext-panel>
 </template>
 <script>
